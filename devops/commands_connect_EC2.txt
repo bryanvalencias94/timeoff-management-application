@@ -12,10 +12,3 @@ ssh -i "C:\Users\bryan\OneDrive\Gorilla\GorillaTest.pem" ec2-user@ec2-34-204-101
 
 Ansible
 ssh -i "C:\Users\bryan\OneDrive\Gorilla\GorillaTest.pem" ec2-user@ec2-54-224-191-30.compute-1.amazonaws.com
-
-
-
-Access Key ID:
-AKIA2QVUOQAQVFB2O2FI
-Secret Access Key:
-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

@@ -55,10 +55,13 @@
 			  
 			  #https://newbedev.com/what-is-the-difference-between-npm-install-and-npm-run-build
 			  https://www.softwaretestinghelp.com/ansible-roles-jenkins-integration-ec2-modules/
+			  https://www.middlewareinventory.com/blog/ansible-aws-ec2/
 			  
 			  
-			  
-			  preparar la instancia de ansible: https://docs.aws.amazon.com/efs/latest/ug/install-botocore.html
+			  preparar la instancia de ansible: 
+			sudo amazon-linux-extras install ansible2
+Seguir los pasos del link
+			https://docs.aws.amazon.com/efs/latest/ug/install-botocore.html
 			  Luego
 			  - sudo /usr/local/bin/pip3 install botocore
 			  - sudo /usr/local/bin/pip3 install boto3
