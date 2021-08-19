@@ -1,0 +1,65 @@
+#install node
+              yum install -y gcc-c++ make
+              curl -sL https://rpm.nodesource.com/setup_12.x | sudo -E bash -
+              yum install -y nodejs 
+              #git install
+              yum -y install git
+              #code deploy agent install
+              yum install -y ruby
+              wget https://aws-codedeploy-eu-west-1.s3.eu-west-1.amazonaws.com/latest/install
+              chmod +x ./install
+              ./install auto
+              service codedeploy-agent status
+              #phantomjs install
+              yum -y install fontconfig freetype freetype-devel fontconfig-devel libstdc++
+              wget https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2
+              mkdir -p /opt/phantomjs
+              bzip2 -d phantomjs-1.9.8-linux-x86_64.tar.bz2
+              tar -xvf phantomjs-1.9.8-linux-x86_64.tar --directory /opt/phantomjs/ --strip-components 1
+              ln -s /opt/phantomjs/bin/phantomjs /usr/bin/phantomjs
+              #install chrome-driver
+              cd /tmp/
+              wget https://chromedriver.storage.googleapis.com/80.0.3987.106/chromedriver_linux64.zip
+              unzip chromedriver_linux64.zip
+              mv chromedriver /usr/bin/chromedriver
+              #Install initial version of app
+              #git clone https://github.com/timeoff-management/application.git /var/timeoff-management
+              #cd /var/timeoff-management
+              #npm install
+              #nohup /usr/bin/npm --prefix /var/timeoff-management/ run start </dev/null &>/dev/null &
+			  
+			  
+			  #Remove NodeJS
+			  yum remove -y nodejs npm
+			  
+			  #intall node 
+			  https://mojitocoder.medium.com/how-to-install-specific-version-of-node-js-on-redhat-based-linux-339c1e59c406
+			   
+			  #Install node 13.7 https://www.rosehosting.com/blog/how-to-install-tar-gz-in-centos/
+			  wget https://nodejs.org/dist/v13.7.0/node-v13.7.0.tar.gz
+			  tar -zxf node-v13.7.0.tar.gz
+			  cd node-v13.7.0/
+			  ./configure
+			  
+			  export PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin
+			  export PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/root/n/bin
+			  ~/.bashrc
+			  
+			  #intalación artifactory : https://www.youtube.com/watch?v=I_ix2G7rfPg
+			  I used the version: 
+			  
+			  
+			  #instalación de la app al final: https://www.freecodecamp.org/news/deploy-nodejs-app-server-to-production/
+			  
+			  #pipelineCI ejemplo nodejs app: https://grupobancolombia.visualstudio.com/Vicepresidencia%20Servicios%20de%20Tecnolog%C3%ADa/_apps/hub/ms.vss-build-web.ci-designer-hub?pipelineId=7949&branch=trunk
+			  
+			  #https://newbedev.com/what-is-the-difference-between-npm-install-and-npm-run-build
+			  https://www.softwaretestinghelp.com/ansible-roles-jenkins-integration-ec2-modules/
+			  
+			  
+			  
+			  preparar la instancia de ansible: https://docs.aws.amazon.com/efs/latest/ug/install-botocore.html
+			  Luego
+			  - sudo /usr/local/bin/pip3 install botocore
+			  - sudo /usr/local/bin/pip3 install boto3
+			  - sudo /usr/local/bin/pip3 install boto

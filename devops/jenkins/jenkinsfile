@@ -1,0 +1,46 @@
+pipeline {
+  agent {label "ec2-agent"}
+    
+  tools {nodejs "NodeJS13"}
+    
+  stages {
+        
+    stage('Git') {
+      steps {
+        git 'https://github.com/bryanvalencias94/timeoff-management-application.git'
+      }
+    }
+     
+    stage('Build') {
+      steps {
+        sh 'npm install'
+        sh 'tar -cvf timeoff-management-application-${BUILD_ID}.tar --exclude timeoff-management-application-${BUILD_ID}.tar --exclude .git .'
+        sh 'pm2 --name timeoff start npm -- start'
+      }
+    }  
+    
+            
+    stage('Test') {
+      steps {
+        sh 'USE_CHROME=1 npm test'
+      }
+    }
+
+    
+     stage ('Artifactory upload') {
+        steps {
+            rtUpload (
+                serverId: "ec3-artifactory",
+                spec: '''{
+                    "files": [
+                    {
+                        "pattern": "timeoff-management-application-${BUILD_ID}.tar",
+                        "target": "timeoff-management-application/${BUILD_ID}/"
+                    }
+                 ]
+                }'''
+            )
+        }
+    }
+  }
+}
