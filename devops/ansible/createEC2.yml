@@ -29,8 +29,8 @@
     block: 
       - name: Create security group
         ec2_group:
-          aws_access_key: AKIA2QVUOQAQVFB2O2FI
-          aws_secret_key: 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
+          aws_access_key: {{ aws_access_key }}
+          aws_secret_key: {{ aws_secret_key }}
           name: "sg_nodejs"
           description: "NodeJS Security Group"
           region: "{{ region }}"
@@ -45,15 +45,15 @@
               cidr_ip: 0.0.0.0/0
       - name: Create an EC2 key
         ec2_key:
-          aws_access_key: AKIA2QVUOQAQVFB2O2FI
-          aws_secret_key: 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
+          aws_access_key: {{ aws_access_key }}
+          aws_secret_key: {{ aws_secret_key }}
           name: "key_ec2_nodejs"
           region: "{{ region }}"
         register: ec2_key
       - name: Create an EC2 key
         ec2_key:
-          aws_access_key: AKIA2QVUOQAQVFB2O2FI
-          aws_secret_key: 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
+          aws_access_key: {{ aws_access_key }}
+          aws_secret_key: {{ aws_secret_key }}
           name: "key_ec2_nodejs"
           region: "{{ region }}"
         register: ec2_key
@@ -62,8 +62,8 @@
         when: ec2_key.changed
       - name: Create an ec2 instance
         ec2:
-          aws_access_key: AKIA2QVUOQAQVFB2O2FI
-          aws_secret_key: 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
+          aws_access_key: {{ aws_access_key }}
+          aws_secret_key: {{ aws_secret_key }}
           key_name: key_ec2_nodejs
           group: sg_nodejs # security group name
           instance_type: "{{ instance_type}}"
