@@ -1,6 +1,7 @@
 ---
 - name: Create Ec2 instances
   hosts: localhost
+  connection: local
   gather_facts: false
   
   vars:
@@ -8,6 +9,7 @@
     instance_type: t2.micro
     ami: ami-0b0af3577fe5e3532 # RedHat Linux 8
     hosts_file: /etc/ansible/hosts 
+    ansible_python_interpreter: /usr/bin/python3
     
   tasks:
   # Block is a Group of Tasks combined together
@@ -43,13 +45,6 @@
               from_port: 3000
               to_port: 3000
               cidr_ip: 0.0.0.0/0
-      - name: Create an EC2 key
-        ec2_key:
-          aws_access_key: "{{ aws_access_key }}"
-          aws_secret_key: "{{ aws_secret_key }}"
-          name: "key_ec2_nodejs"
-          region: "{{ region }}"
-        register: ec2_key
       - name: Create an EC2 key
         ec2_key:
           aws_access_key: "{{ aws_access_key }}"

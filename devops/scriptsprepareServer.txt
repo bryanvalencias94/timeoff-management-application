@@ -66,3 +66,9 @@ Seguir los pasos del link
 			  - sudo /usr/local/bin/pip3 install botocore
 			  - sudo /usr/local/bin/pip3 install boto3
 			  - sudo /usr/local/bin/pip3 install boto
+			  
+			  
+			  
+			  
+			  
+			  ansible-playbook devops/ansible/createEC2.yml -e aws_access_key=*** -e aws_secret_key=*** -vvv
