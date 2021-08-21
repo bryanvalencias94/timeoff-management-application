@@ -49,7 +49,7 @@
         ec2_key:
           aws_access_key: "{{ aws_access_key }}"
           aws_secret_key: "{{ aws_secret_key }}"
-          name: 'timeoff-key-"{{ build_number_jenkis }}"'
+          name: 'timeoff-key-{{ build_number_jenkis }}'
           region: "{{ region }}"
         register: ec2_key
       - name: Save private key (PEM file)
@@ -59,7 +59,7 @@
         ec2:
           aws_access_key: "{{ aws_access_key }}"
           aws_secret_key: "{{ aws_secret_key }}"
-          key_name: key_ec2_nodejs
+          key_name: 'timeoff-key-{{ build_number_jenkis }}'
           group: sg_nodejs # security group name
           instance_type: "{{ instance_type}}"
           image: "{{ ami }}"
@@ -69,7 +69,7 @@
           count_tag:
             Name: timeofftimeoff
           instance_tags:
-            Name: 'timeoff-app-"{{ build_number_jenkis }}"'
+            Name: 'timeoff-app-{{ build_number_jenkis }}'
         register: ec2
       - name: Save IP to inventory file
         lineinfile:
