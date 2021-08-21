@@ -55,7 +55,7 @@
 
     - name: Install pm2
       become: yes
-      command: /usr/local/n/versions/node/13.7.0/bin/npm install pm2 -g
+      ansible.builtin.shell: npm install pm2 -g
       #npm: name=pm2 global=yes production=yes
       
       #IN EC2-USER
