@@ -53,10 +53,17 @@
       become: yes     
       ansible.builtin.shell: echo "PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
 
+    - name: Check if npm exists.
+      become: yes
+      stat:
+        path: /usr/local/sbin/npm
+      register: npm_file
+      
     - name: Link npm 
       become: yes
       ansible.builtin.shell: ln -s /usr/local/n/versions/node/13.7.0/bin/npm /usr/local/sbin/npm
-
+      when: npm_file.stat.exists != True 
+      
     - name: Install pm2
       become: yes
       command: npm install pm2 -g
