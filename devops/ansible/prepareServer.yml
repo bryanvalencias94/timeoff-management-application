@@ -1,53 +1,38 @@
 ---
-- hosts: my_app
-  sudo: yes
-
-
-  vars:
-    - homeDir: /home/ubuntu
-    - appDir : app
-    - repo: my_app
-    - account: mbejda
-    - privateKey: /Users/milos/.ssh/id_rsa
-
+- hosts: {{ name_group_host }}
+  gather_facts: yes
 
   tasks:
-  - name: Install Packages
-    apt: name={{ item }} update_cache=yes state=latest
-    with_items:
-      - build-essential
-      - npm
-      - nodejs-legacy
-      - git
-      - mcrypt
-      - nginx
-      - curl
 
-  - name: Install pm2
-    npm: name=pm2 global=yes production=yes
-
-  - name: Create APP Directory
-    file: path={{homeDir}}/{{appDir}} state=directory
-
-  - name: Copy Private Key
-    copy: src={{privateKey}} dest={{homeDir}} mode=0600
-
-  - name: Git Clone Repo
-    git: repo=git@github.com:{{account}}/{{repo}}.git dest={{homeDir}}/{{appDir}} update=yes force=yes accept_hostkey=yes key_file={{homeDir}}/id_rsa
-    register: git_finished
-
-  - name: Running NPM install
-    npm: path={{homeDir}}/{{appDir}}/backened
-    register: npm_finished
-    when: git_finished.changed
-
-  - name: Stop APP
-    sudo_user: ubuntu
-    command: pm2 stop app chdir={{homeDir}}/{{appDir}}/backened
-    ignore_errors: yes
-
-  - name: Start APP
-    sudo_user: ubuntu
-    command: pm2 start index.js --name app chdir={{homeDir}}/{{appDir}}/backened
-    ignore_errors: yes
-    when: npm_finished.changed
+    - name: Install base packages
+      become: yes
+      yum:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - gcc-c++
+          - git
+          - make
+          - gitsud
+          - wget
+          
+    - name: Add NodeJS 13.17.0 to PATH ENV Variable
+      become: yes    
+      command: export PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin
+      
+    - name: Add NodeJS 13.17.0 to PATH ENV Variable using bashrc file
+      become: yes     
+      command: echo "PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
+      
+      #IN EC2-USER
+    - name: Add NodeJS 13.17.0 to PATH ENV Variable file to ec2-user
+      become_user: ec2-user
+      command: export PATH=$PATH:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/n/versions/node/13.7.0/bin
+      
+    - name: Add NodeJS 13.17.0 to PATH ENV Variable using bashrc file to ec2-user  
+      become_user: ec2-user
+      command: echo "PATH=$PATH:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
+      
+    - name: Install pm2
+      become: yes
+      npm: name=pm2 global=yes production=yes

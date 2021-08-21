@@ -1,8 +1,12 @@
 pipeline {
-  agent {label "ec2-agent"}
+  agent {label "ec2-ansible"}
     
-  tools {nodejs "NodeJS13"}
-    
+  tools {nodejs "NodeJS13" }
+  
+  environment {
+        name_group_host = "timeoff-server-${BUILD_ID}"
+  }
+  
   stages {
         
     stage('Git') {
@@ -11,35 +15,59 @@ pipeline {
       }
     }
      
-    stage('Build') {
-      steps {
-        sh 'npm install'
-        sh 'tar -cvf timeoff-management-application-${BUILD_ID}.tar --exclude timeoff-management-application-${BUILD_ID}.tar --exclude .git .'
-        sh 'pm2 --name timeoff start npm -- start'
-      }
-    }  
+    //stage('Build') {
+    //  steps {
+    //    sh 'npm install'
+    //    sh 'tar -cf timeoff-management-application-${BUILD_ID}.tar --exclude timeoff-management-application-${BUILD_ID}.tar --exclude .git .'
+    //    sh 'pm2 --name timeoff start npm -- start'
+    //  }
+    //}  
     
             
-    stage('Test') {
-      steps {
-        sh 'USE_CHROME=1 npm test'
-      }
-    }
+    //stage('Test') {
+   //   steps {
+    //    sh 'USE_CHROME=1 npm test'
+    //  }
+    //}
 
     
-     stage ('Artifactory upload') {
+    //stage ('Artifactory upload') {
+    //    steps {
+    //        rtUpload (
+    //            serverId: "ec3-artifactory",
+    //            spec: '''{
+    //                "files": [
+     //               {
+    //                    "pattern": "timeoff-management-application-${BUILD_ID}.tar",
+    //                    "target": "timeoff-management-application/${BUILD_ID}/"
+    //                }
+    //             ]
+    //            }'''
+    //        )
+    //    }
+    //}
+    
+    stage ('Create infrastructure Ansible') {
         steps {
-            rtUpload (
-                serverId: "ec3-artifactory",
-                spec: '''{
-                    "files": [
-                    {
-                        "pattern": "timeoff-management-application-${BUILD_ID}.tar",
-                        "target": "timeoff-management-application/${BUILD_ID}/"
-                    }
-                 ]
-                }'''
+            sh 'touch /home/ec2-user/.ansible/tmp hosts'
+            sh '> hosts'
+            sh 'echo "[${name_group_host}]" >> /home/ec2-user/.ansible/tmp/hosts'
+            withCredentials([usernamePassword(credentialsId: 'aws_credentials', passwordVariable: 'aws_secret_key', usernameVariable: 'aws_access_key')]) {
+             ansiblePlaybook(
+                playbook: 'devops/ansible/createEC2.yml',
+                    //inventory: 'AnsibleInventory.ini',
+                    //installation: 'ansible-latest',
+                    //disableHostKeyChecking: true,
+                    become: 'yes',
+                    extras: '-vvv',
+                    extraVars: [
+                        aws_access_key: "${aws_access_key}",
+                        aws_secret_key: "${aws_secret_key}",
+                        name_group_host: "${name_group_host}",
+                        build_number_jenkis: "${BUILD_ID}"
+                    ]
             )
+            }
         }
     }
   }
