@@ -15,7 +15,7 @@
           - make
           - wget
 
-    - name: Ansible check n directory exists.
+    - name: Check if n directory exists.
       become: yes
       stat:
         path: /root/n
@@ -55,7 +55,8 @@
 
     - name: Install pm2
       become: yes
-      npm: name=pm2 global=yes production=yes
+      command: npm install pm2 -g
+      #npm: name=pm2 global=yes production=yes
       
       #IN EC2-USER
     - name: Add NodeJS 13.17.0 to PATH ENV Variable file to ec2-user
