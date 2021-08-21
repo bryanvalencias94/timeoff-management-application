@@ -1,5 +1,6 @@
 ---
-- hosts: "{{ name_group_host }}"
+- name: Config and deploy application
+  hosts: "{{ name_group_host }}"
   gather_facts: yes
 
   tasks:

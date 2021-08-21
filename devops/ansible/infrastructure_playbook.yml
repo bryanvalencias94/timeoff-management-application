@@ -1,5 +1,5 @@
 ---
-- name: Create Ec2 instances
+- name: Create infrastructure
   hosts: localhost
   connection: local
   gather_facts: false
