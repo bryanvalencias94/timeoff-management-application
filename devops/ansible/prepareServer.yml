@@ -53,14 +53,16 @@
       become: yes     
       ansible.builtin.shell: echo "PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
 
-    #- name: Link npm 
-    #  become: yes
-    #  ansible.builtin.shell: ln -s /usr/local/n/versions/node/13.7.0/bin/npm /usr/local/bin/npm
+    - name: Link npm 
+      become: yes
+      ansible.builtin.shell: ln -s /usr/local/n/versions/node/13.7.0/bin/npm /usr/local/sbin/npm
 
     - name: Install pm2
       become: yes
       #ansible.builtin.shell: npm install pm2 -g
-      npm: name=pm2 global=yes production=yes
+      community.general.npm:
+        name: pm2
+        global: yes
       
       #IN EC2-USER
     - name: Add NodeJS 13.17.0 to PATH ENV Variable file to ec2-user
