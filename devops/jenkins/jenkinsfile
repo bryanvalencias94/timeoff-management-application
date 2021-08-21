@@ -53,15 +53,14 @@ pipeline {
         }
     }
     
-    
-    stage ('Create infrastructure Ansible') {
+    stage ('Infrastructure') {
         steps {
             sh 'touch /home/ec2-user/.ansible/tmp hosts'
             sh '> hosts'
             sh 'echo "[${name_group_host}]" >> /home/ec2-user/.ansible/tmp/hosts'
             withCredentials([usernamePassword(credentialsId: 'aws_credentials', passwordVariable: 'aws_secret_key', usernameVariable: 'aws_access_key')]) {
              ansiblePlaybook(
-                playbook: 'devops/ansible/createEC2.yml',
+                playbook: 'devops/ansible/infrastructure_playbook.yml',
                     become: 'yes',
                     extras: '-v',
                     extraVars: [
@@ -75,11 +74,11 @@ pipeline {
         }
     }
     
-    stage ('Prepare, install and run NodeJS application') {
+    stage ('Configuration management and application deployment') {
         steps {
             withCredentials([usernamePassword(credentialsId: 'ec2-artifactory', passwordVariable: 'artifactory_password', usernameVariable: 'artifactory_username')]) {
              ansiblePlaybook(
-                playbook: 'devops/ansible/prepareServer.yml',
+                playbook: 'devops/ansible/config_management_playbook.yml',
                     inventory: '/home/ec2-user/.ansible/tmp/hosts',
                     become: 'yes',
                     extras: '-v',
