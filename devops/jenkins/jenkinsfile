@@ -1,16 +1,22 @@
 pipeline {
   agent {label "ec2-ansible"}
-    
+  
+  options {
+        // This is required if you want to clean before build
+        skipDefaultCheckout(true)
+  }
+  
   tools {nodejs "NodeJS13" }
   
   environment {
-        name_group_host = "timeoff-server-98"
+        name_group_host = "timeoff-server-${BUILD_ID}"
   }
   
   stages {
         
     stage('Git') {
       steps {
+        cleanWs()
         git 'https://github.com/bryanvalencias94/timeoff-management-application.git'
       }
     }
@@ -18,17 +24,17 @@ pipeline {
     stage('Build') {
       steps {
         sh 'npm install'
-        sh 'tar -cf timeoff-management-application-${BUILD_ID}.tar --exclude timeoff-management-application-${BUILD_ID}.tar --exclude .git .'
-        sh 'pm2 --name timeoff start npm -- start'
+        sh 'tar -zcf ../timeoff-management-application-${BUILD_ID}.tar.gz --exclude .git . '
+        sh 'mv ../timeoff-management-application-${BUILD_ID}.tar.gz .'
       }
     }  
     
             
-    //stage('Test') {
-   //   steps {
-    //    sh 'USE_CHROME=1 npm test'
-    //  }
-    //}
+    stage('Test') {
+      steps {
+        sh 'USE_CHROME=1 npm test'
+      }
+    }
 
     
     stage ('Artifactory upload') {
@@ -38,7 +44,7 @@ pipeline {
                 spec: '''{
                     "files": [
                     {
-                        "pattern": "timeoff-management-application-${BUILD_ID}.tar",
+                        "pattern": "timeoff-management-application-${BUILD_ID}.tar.gz",
                         "target": "timeoff-management-application/${BUILD_ID}/"
                     }
                  ]
@@ -47,7 +53,7 @@ pipeline {
         }
     }
     
-    /*
+    
     stage ('Create infrastructure Ansible') {
         steps {
             sh 'touch /home/ec2-user/.ansible/tmp hosts'
@@ -57,7 +63,7 @@ pipeline {
              ansiblePlaybook(
                 playbook: 'devops/ansible/createEC2.yml',
                     become: 'yes',
-                    extras: '-vvv',
+                    extras: '-v',
                     extraVars: [
                         aws_access_key: "${aws_access_key}",
                         aws_secret_key: "${aws_secret_key}",
@@ -67,7 +73,7 @@ pipeline {
             )
             }
         }
-    }*/
+    }
     
     stage ('Prepare, install and run NodeJS application') {
         steps {
@@ -76,7 +82,7 @@ pipeline {
                 playbook: 'devops/ansible/prepareServer.yml',
                     inventory: '/home/ec2-user/.ansible/tmp/hosts',
                     become: 'yes',
-                    extras: '-vvv',
+                    extras: '-v',
                     extraVars: [
                         artifactory_password: "${artifactory_password}",
                         artifactory_username: "${artifactory_username}",
@@ -88,4 +94,15 @@ pipeline {
         }
     }
   }
+  post {
+        // Clean after build
+        always {
+            cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: true,
+                    notFailBuild: true,
+                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                               [pattern: '.propsfile', type: 'EXCLUDE']])
+        }
+    }
 }
