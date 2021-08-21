@@ -59,10 +59,7 @@
 
     - name: Install pm2
       become: yes
-      #ansible.builtin.shell: npm install pm2 -g
-      community.general.npm:
-        name: pm2
-        global: yes
+      ansible.builtin.shell: npm install pm2 -g
       
       #IN EC2-USER
     - name: Add NodeJS 13.17.0 to PATH ENV Variable file to ec2-user

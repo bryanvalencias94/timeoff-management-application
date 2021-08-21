@@ -1,0 +1,14 @@
+ssh -i /c/Users/bryan/OneDrive/Gorilla/GorillaTest.pem ec2-user@ec2-100-25-202-205.compute-1.amazonaws.com
+
+Jenkins
+ssh -i "C:\Users\bryan\OneDrive\Gorilla\GorillaTest.pem" ec2-user@ec2-100-25-202-205.compute-1.amazonaws.com
+
+Jenkins Agent
+ssh -i "GorillaTest.pem" ec2-user@ec2-44-197-182-182.compute-1.amazonaws.com
+ssh -i "C:\Users\bryan\OneDrive\Gorilla\GorillaTest.pem" ec2-user@ec2-44-197-182-182.compute-1.amazonaws.com
+
+Artifactory
+ssh -i "C:\Users\bryan\OneDrive\Gorilla\GorillaTest.pem" ec2-100-25-152-224.compute-1.amazonaws.com
+
+Ansible
+ssh -i "C:\Users\bryan\OneDrive\Gorilla\GorillaTest.pem" ec2-user@ec2-54-224-191-30.compute-1.amazonaws.com
