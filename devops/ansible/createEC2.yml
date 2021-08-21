@@ -53,7 +53,7 @@
           region: "{{ region }}"
         register: ec2_key
       - name: Save private key (PEM file)
-        copy: content="{{ec2_key.key.private_key}}" dest=/home/ansible/timeoff.pem mode=0600
+        copy: content="{{ec2_key.key.private_key}}" dest=/home/ec2-user/.ansible/tmp/timeoff.pem mode=0600
         when: ec2_key.changed
       - name: Create an ec2 instance
         ec2:
