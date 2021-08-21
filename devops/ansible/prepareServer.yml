@@ -73,8 +73,6 @@
       npm:
         name: pm2
         global: yes
-        production: yes
-        state: present
       
       #IN EC2-USER
     - name: Add NodeJS 13.17.0 to PATH ENV Variable file to ec2-user
