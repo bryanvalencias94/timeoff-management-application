@@ -63,6 +63,28 @@
       become: yes
       ansible.builtin.shell: ln -s /usr/local/n/versions/node/13.7.0/bin/npm /usr/local/sbin/npm
       when: npm_file.stat.exists != True 
+
+    - name: Check if node exists.
+      become: yes
+      stat:
+        path: /usr/local/sbin/node
+      register: node_file
+      
+    - name: Link node 
+      become: yes
+      ansible.builtin.shell: ln -s /usr/local/n/versions/node/13.7.0/bin/node /usr/local/sbin/node
+      when: node_file.stat.exists != True 
+
+    - name: Check if node exists in /usr/bin/.
+      become: yes
+      stat:
+        path: /usr/bin/node
+      register: usr_bin_node_file
+      
+    - name: Link node 
+      become: yes
+      ansible.builtin.shell: ln -s /usr/local/n/versions/node/13.7.0/bin/node /usr/bin/node
+      when: usr_bin_node_file.stat.exists != True
       
     #- name: Install pm2
     #  become: yes
