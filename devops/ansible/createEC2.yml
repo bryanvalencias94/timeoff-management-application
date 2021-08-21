@@ -74,7 +74,7 @@
       - name: Save IP to inventory file
         lineinfile:
           dest: "{{hosts_file}}"
-          insertafter: '\[webservers\]'
+          insertafter: '\["{{ name_group_host }}"\]'
           line: "{{item.private_ip}}"
         with_items: "{{ec2.instances}}"
       - name: Wait for SSH to come up
