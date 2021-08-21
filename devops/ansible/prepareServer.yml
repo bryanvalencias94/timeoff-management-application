@@ -64,9 +64,16 @@
       ansible.builtin.shell: ln -s /usr/local/n/versions/node/13.7.0/bin/npm /usr/local/sbin/npm
       when: npm_file.stat.exists != True 
       
+    #- name: Install pm2
+    #  become: yes
+    #  command: npm install pm2 -g
+      
     - name: Install pm2
-      become: yes
-      command: npm install pm2 -g
+      npm:
+        name: pm2
+        global: yes
+        production: yes
+        state: present
       
       #IN EC2-USER
     - name: Add NodeJS 13.17.0 to PATH ENV Variable file to ec2-user
