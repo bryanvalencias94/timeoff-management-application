@@ -86,10 +86,6 @@
       ansible.builtin.shell: ln -s /usr/local/n/versions/node/13.7.0/bin/node /usr/bin/node
       when: usr_bin_node_file.stat.exists != True
       
-    #- name: Install pm2
-    #  become: yes
-    #  command: npm install pm2 -g
-      
     - name: Install pm2
       become: yes
       community.general.npm:
@@ -105,4 +101,17 @@
       become_user: ec2-user
       ansible.builtin.shell: echo "PATH=$PATH:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
       
-
+    - name: Fetch app from Artifactory
+      get_url:
+        url: "http://ec2-100-25-152-224.compute-1.amazonaws.com:8082/artifactory/timeoff-management-application/{{ build_number_jenkis }}/timeoff-management-application-{{ build_number_jenkis }}.tar.gz"
+        dest: /home/ec2-user/timeoff-management-application/timeoff-management-application-{{ build_number_jenkis }}.tar.gz
+        username: '{{ artifactory_username }}'
+        password: '{{ artifactory_password }}'
+        
+    - name: Extract timeoff application tar 
+      ansible.builtin.unarchive:
+        src: /var/timeoff-management-application/timeoff-management-application-{{ build_number_jenkis }}.tar.gz
+        dest: /var/timeoff-management-application/
+        
+    - name: Start application as a daemon
+      ansible.builtin.shell: cd pm2 --name timeoff start npm -- start

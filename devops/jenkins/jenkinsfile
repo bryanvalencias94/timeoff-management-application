@@ -4,7 +4,7 @@ pipeline {
   tools {nodejs "NodeJS13" }
   
   environment {
-        name_group_host = "timeoff-server-${BUILD_ID}"
+        name_group_host = "timeoff-server-98"
   }
   
   stages {
@@ -15,13 +15,13 @@ pipeline {
       }
     }
      
-    //stage('Build') {
-    //  steps {
-    //    sh 'npm install'
-    //    sh 'tar -cf timeoff-management-application-${BUILD_ID}.tar --exclude timeoff-management-application-${BUILD_ID}.tar --exclude .git .'
-    //    sh 'pm2 --name timeoff start npm -- start'
-    //  }
-    //}  
+    stage('Build') {
+      steps {
+        sh 'npm install'
+        sh 'tar -cf timeoff-management-application-${BUILD_ID}.tar --exclude timeoff-management-application-${BUILD_ID}.tar --exclude .git .'
+        sh 'pm2 --name timeoff start npm -- start'
+      }
+    }  
     
             
     //stage('Test') {
@@ -31,22 +31,23 @@ pipeline {
     //}
 
     
-    //stage ('Artifactory upload') {
-    //    steps {
-    //        rtUpload (
-    //            serverId: "ec3-artifactory",
-    //            spec: '''{
-    //                "files": [
-     //               {
-    //                    "pattern": "timeoff-management-application-${BUILD_ID}.tar",
-    //                    "target": "timeoff-management-application/${BUILD_ID}/"
-    //                }
-    //             ]
-    //            }'''
-    //        )
-    //    }
-    //}
+    stage ('Artifactory upload') {
+        steps {
+            rtUpload (
+                serverId: "ec2-artifactory",
+                spec: '''{
+                    "files": [
+                    {
+                        "pattern": "timeoff-management-application-${BUILD_ID}.tar",
+                        "target": "timeoff-management-application/${BUILD_ID}/"
+                    }
+                 ]
+                }'''
+            )
+        }
+    }
     
+    /*
     stage ('Create infrastructure Ansible') {
         steps {
             sh 'touch /home/ec2-user/.ansible/tmp hosts'
@@ -55,14 +56,30 @@ pipeline {
             withCredentials([usernamePassword(credentialsId: 'aws_credentials', passwordVariable: 'aws_secret_key', usernameVariable: 'aws_access_key')]) {
              ansiblePlaybook(
                 playbook: 'devops/ansible/createEC2.yml',
-                    //inventory: 'AnsibleInventory.ini',
-                    //installation: 'ansible-latest',
-                    //disableHostKeyChecking: true,
                     become: 'yes',
                     extras: '-vvv',
                     extraVars: [
                         aws_access_key: "${aws_access_key}",
                         aws_secret_key: "${aws_secret_key}",
+                        name_group_host: "${name_group_host}",
+                        build_number_jenkis: "${BUILD_ID}"
+                    ]
+            )
+            }
+        }
+    }*/
+    
+    stage ('Prepare, install and run NodeJS application') {
+        steps {
+            withCredentials([usernamePassword(credentialsId: 'ec2-artifactory', passwordVariable: 'artifactory_password', usernameVariable: 'artifactory_username')]) {
+             ansiblePlaybook(
+                playbook: 'devops/ansible/prepareServer.yml',
+                    inventory: '/home/ec2-user/.ansible/tmp/hosts',
+                    become: 'yes',
+                    extras: '-vvv',
+                    extraVars: [
+                        artifactory_password: "${artifactory_password}",
+                        artifactory_username: "${artifactory_username}",
                         name_group_host: "${name_group_host}",
                         build_number_jenkis: "${BUILD_ID}"
                     ]
