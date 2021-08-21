@@ -8,7 +8,7 @@
     region: us-east-1
     instance_type: t2.micro
     ami: ami-0b0af3577fe5e3532 # RedHat Linux 8
-    hosts_file: /etc/ansible/hosts 
+    hosts_file: /home/ec2-user/.ansible/tmp/hosts 
     ansible_python_interpreter: /usr/bin/python3
     
   tasks:
