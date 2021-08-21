@@ -100,6 +100,12 @@
     - name: Add NodeJS 13.17.0 to PATH ENV Variable using bashrc file to ec2-user  
       become_user: ec2-user
       ansible.builtin.shell: echo "PATH=$PATH:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
+    
+    - name: Create a directory if it does not exist
+      ansible.builtin.file:
+        path: /home/ec2-user/timeoff-management-application/
+        state: directory
+        mode: '0755'
       
     - name: Fetch app from Artifactory
       get_url:
