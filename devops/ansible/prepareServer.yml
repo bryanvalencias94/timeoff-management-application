@@ -16,6 +16,7 @@
           - wget
 
     - name: Ansible check n directory exists.
+      become: yes
       stat:
         path: /root/n
       register: n_folder
