@@ -15,18 +15,26 @@
           - make
           - wget
 
+    - name: Ansible check n directory exists.
+      stat:
+        path: /root/n
+      register: n_folder
+      
     - name: Download Node.js version manager
       become: yes    
-      command: curl -L https://git.io/n-install --output n-install  
-
+      command: curl -L https://git.io/n-install --output n-install
+      when: n_folder.stat.exists != True    
+        
     - name: Allow n-install to be executable.
       become: yes    
-      command: chmod +x n-install 
+      command: chmod +x n-install
+      when: n_folder.stat.exists != True         
 
     - name: Execute n-install.
       become: yes 
       ansible.builtin.shell:      
         cmd: yes y | ./n-install
+      when: n_folder.stat.exists != True   
       
     - name: Install 13.7.0 NodeJS version
       become: yes    
