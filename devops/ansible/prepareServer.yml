@@ -38,11 +38,11 @@
     
     - name: Add NodeJS 13.17.0 to PATH ENV Variable
       become: yes    
-      command: export PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin
+      ansible.builtin.shell: export PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin
       
     - name: Add NodeJS 13.17.0 to PATH ENV Variable using bashrc file
       become: yes     
-      command: echo "PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
+      ansible.builtin.shell: echo "PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
 
     - name: Install pm2
       become: yes
@@ -51,10 +51,10 @@
       #IN EC2-USER
     - name: Add NodeJS 13.17.0 to PATH ENV Variable file to ec2-user
       become_user: ec2-user
-      command: export PATH=$PATH:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/n/versions/node/13.7.0/bin
+      ansible.builtin.shell: export PATH=$PATH:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/n/versions/node/13.7.0/bin
       
     - name: Add NodeJS 13.17.0 to PATH ENV Variable using bashrc file to ec2-user  
       become_user: ec2-user
-      command: echo "PATH=$PATH:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
+      ansible.builtin.shell: echo "PATH=$PATH:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
       
 
