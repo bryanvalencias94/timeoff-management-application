@@ -13,9 +13,28 @@
           - gcc-c++
           - git
           - make
-          - gitsud
           - wget
-          
+
+    - name: Download Node.js version manager
+      become: yes    
+      command: curl -L https://git.io/n-install --output n-install  
+
+    - name: Allow n-install to be executable.
+      become: yes    
+      command: chmod +x n-install 
+
+    - name: Execute n-install.
+      become: yes    
+      command: yes y | ./n-install
+      
+    - name: Install 13.7.0 NodeJS version
+      become: yes    
+      command: $HOME/n/bin/n 13.7.0
+      
+    - name: Clean all yum
+      become: yes    
+      command: yum clean all 
+    
     - name: Add NodeJS 13.17.0 to PATH ENV Variable
       become: yes    
       command: export PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin
@@ -23,6 +42,10 @@
     - name: Add NodeJS 13.17.0 to PATH ENV Variable using bashrc file
       become: yes     
       command: echo "PATH=$PATH:/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
+
+    - name: Install pm2
+      become: yes
+      npm: name=pm2 global=yes production=yes
       
       #IN EC2-USER
     - name: Add NodeJS 13.17.0 to PATH ENV Variable file to ec2-user
@@ -33,6 +56,4 @@
       become_user: ec2-user
       command: echo "PATH=$PATH:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/ec2-user/.local/bin:/home/ec2-user/bin:/usr/local/n/versions/node/13.7.0/bin" >> ~/.bashrc
       
-    - name: Install pm2
-      become: yes
-      npm: name=pm2 global=yes production=yes
+
