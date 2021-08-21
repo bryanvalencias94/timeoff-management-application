@@ -116,7 +116,8 @@
         
     - name: Extract timeoff application tar 
       ansible.builtin.unarchive:
-        src: /var/timeoff-management-application/timeoff-management-application-{{ build_number_jenkis }}.tar.gz
+        remote_src: yes
+        src : /var/timeoff-management-application/timeoff-management-application-{{ build_number_jenkis }}.tar.gz
         dest: /var/timeoff-management-application/
         
     - name: Start application as a daemon
