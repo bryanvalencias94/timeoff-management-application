@@ -69,6 +69,7 @@
     #  command: npm install pm2 -g
       
     - name: Install pm2
+      become: yes
       npm:
         name: pm2
         global: yes
