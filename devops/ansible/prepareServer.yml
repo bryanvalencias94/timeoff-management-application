@@ -121,5 +121,4 @@
         dest: /home/ec2-user/timeoff-management-application/
         
     - name: Start application as a daemon
-      command: cd /home/ec2-user/timeoff-management-application/
-      ansible.builtin.shell: pm2 --name timeoff start npm -- start 
+      ansible.builtin.shell: cd /home/ec2-user/timeoff-management-application/ ; pm2 --name timeoff start npm -- start 
