@@ -24,8 +24,9 @@
       command: chmod +x n-install 
 
     - name: Execute n-install.
-      become: yes    
-      command: yes y | ./n-install
+      become: yes 
+      ansible.builtin.shell:      
+        cmd: yes y | ./n-install
       
     - name: Install 13.7.0 NodeJS version
       become: yes    
