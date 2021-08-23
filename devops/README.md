@@ -20,6 +20,8 @@ Example:
     <img src="images/NodeJSGlobalToolJenkins.png" alt="NodeJSGlobalToolJenkins" width="700" height="600">
   </a>
 </p>
+
+![](https://github.com/bryanvalencias94/timeoff-management-application/images/NodeJSGlobalToolJenkins.png)
 - Global tool configuration for Ansible
 Example:
  
