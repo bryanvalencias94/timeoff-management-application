@@ -1,6 +1,23 @@
 # DevOps for Timeoff Magamenet Application
 
-[TOC]
+<!-- TABLE OF CONTENTS -->
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#Prerequisites">Prerequisites</a>
+    </li>
+    <li>
+      <a href="#architecture-diagrams">Architecture diagrams</a>
+      <ul>
+        <li><a href="#devops-component-architecture">DevOps component architecture</a></li>
+        <li><a href="#vevops-flow-diagram">DevOps flow diagram</a></li>
+      </ul>
+    </li>
+    <li><a href="#understanding-the-jenkins-pipeline-and-ansible-playbooks">Understanding the Jenkins pipeline and Ansible playbooks</a></li>
+    <li><a href="#steps-to-deploy-the-application-using-the-proposed-strategy">Steps to deploy the application using the proposed strategy</a></li>
+  </ol>
+</details>
 
 This “devops” folder contains all the Jenkins pipelines, infrastructure as code and configuration management (using Ansible) and pre-requisites to deploy the Timeoff Management Application (https://github.com/bryanvalencias94/timeoff-management-application) in an EC2 virtualization solution.
 
@@ -18,17 +35,21 @@ This “devops” folder contains all the Jenkins pipelines, infrastructure as c
 - Global tool configuration for NodeJS installation using version 13.7.0. Include node-test in Global npm packages to install. Name it as NodeJS13. If you prefer using another name, change it in the Jenkinsfile as well.
 	
 	Example:
+	
 ![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/NodeJSGlobalToolJenkins.png?raw=true)
 
 - Global tool configuration for Ansible
 	
 	Example:
+	
 ![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/AnsibleGlobalToolJenkins.png?raw=true)
+
 - Configure system for Artifactory, using the corresponding credentials and URLs.
 
 	Example:
 
 ![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/JFrogConfigJenkins.png?raw=true)
+
 2. Artifactory instance with a repository named "timeoff-management-application".
 
 Example:
@@ -42,17 +63,20 @@ Example:
 4. Webhook configured on GitHub in the corresponding repository to the Jenkins URL.
 
 	Example:
+	
 ![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/GitHubWebHook.png?raw=true)
 
 # Architecture diagrams
-## 1. DevOps component architecture
+## DevOps component architecture
 Jenkins, Artifactory, and Ansible (Jenkins agent) are installed on EC2 instances for this example. Other installations are also valid, such as using docker.
+
 ![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/DevOpsComponentArchitecture.png?raw=true)
 
-## 2. DevOps flow diagram
+## DevOps flow diagram
+
 ![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/DevOpsFlow.png?raw=true)
 
-# Understanding the Jenkins pipeline and Ansible playbooks.
+# Understanding the Jenkins pipeline and Ansible playbooks
 ## Jenkins pipeline
 The Jenkins pipeline is made up of the following 6 stages:
 1.	Git
@@ -98,7 +122,7 @@ Once the EC2 instance is created it is time to prepare it to be able to run the 
 -	Next, a directory is created to store the application, then the tar.gz file is downloaded from Artifactory (note that the Artifactory credentials from Jenkins are used) and it is extracted in the corresponding directory.
 -	The last task runs the Timeoff Management application using pm2.
 
-# Steps to deploy the application using the proposed strategy.
+# Steps to deploy the application using the proposed strategy
 1.	Create a pipeline in Jenkins and configure it to use pipeline script from SCM. Set the git repository and the path for the Jenkinsfile (relative path in the git repository). For this specific example and repository, these are the values:
 
 ![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/JenkinsPipeline1.png?raw=true)
@@ -113,3 +137,5 @@ Also choose the “GitHub hook trigger for GITScm polling” in the “Build tri
 ![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/BuildCreatedJenkins.png?raw=true)
 
 4.	You can use the public IP of the EC2 instance and port 3000 to open the application through the browser.
+
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/ApplicationRunning.png?raw=true)
