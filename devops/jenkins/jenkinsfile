@@ -24,7 +24,7 @@ pipeline {
     stage('Build') {
       steps {
         sh 'npm install'
-        sh 'tar -zcf ../timeoff-management-application-${BUILD_ID}.tar.gz --exclude .git . '
+        sh 'tar -zcf ../timeoff-management-application-${BUILD_ID}.tar.gz --exclude devops --exclude .git . '
         sh 'mv ../timeoff-management-application-${BUILD_ID}.tar.gz .'
       }
     }  
