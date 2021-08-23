@@ -88,38 +88,50 @@ Jenkins, Artifactory, and Ansible (Jenkins agent) are installed on EC2 instances
 # Understanding the Jenkins pipeline and Ansible playbooks
 ## Jenkins pipeline
 The Jenkins pipeline is made up of the following 6 stages:
+
 1.	Git
+
 Fetch the code from the corresponding git branch into the Jenkins agent workspace.
 
 2.	Build
+
 The command “npm install” is executed. Also, a tar.gz file is generated excluding non-necessary files to run the app on the final server.
 
 3.	Test
+
 The command “npm test” is run to execute the test. For this specific example only one test is executed, due to the complete set of test takes a long time to conclude.
 
 4.	Artifact upload
+
 Using the “rtUpload” function of Jenkins, the tar.gz file is uploaded to the Artifactory repository. To achieve this the pattern and target are specified. In this step, the mentioned pre-requisites for Artifactory credentials and system configuration must be completed.
 
 5.	Infrastructure
+
 Using the “ansiblePlaybook” function, the playbook  called “infrastructure_playbook.yml” is run. Note that for this step, the mechanism “withCredentials” is used to pass to Ansible the AWS credentials from a Jenkins credentials object. Then, the AccessKey and SecretKey are passed as “extraVars”.
 
 6.	Configuration management and application deployment
+
 Another playbook is run using the “ansiblePlaybook” function. In this case, the credentials sent to Ansible are the Artifactory credentials, because a task of the “config_management_playbook.yml” needs download the final artifact from Artifactory to run the NodeJS application.
 In the first sections of the pipeline, the agent with label “ec2-ansible” is indicated. This ensures that the agent with the Ansible instance is used to run the steps. The tool named “NodeJS13” is also specified to use the specific version of NodeJS in the Jenkins agent.
 To clean the workspace on the Jenkins agent once the pipeline is already finished, a post configuration is included.
 
 ## Ansible playbooks
+
 ### Infrastructure playbook
+
 The infrastructure playbook is used to create the necessary infrastructure to run the Timeoff Management application in a virtualization solution, for this case an EC2 instance in AWS. At first, some variables are indicated to customize the playbook, such as the AWS region, the instance type, the AMI ID, among others.
 The following resources are created in AWS in the group of tasks:
 
-**1.	Security group**.
+**1.	Security group**
+
 Note that AccessKey and SecretKey are passed as variables from the Jenkins pipeline. It is also important to note that the port 3000 is specifed and allowed to be accessed from any machine, since the NodeJS app uses this port to be exposed.
 
 **2.	Key pair**
+
 These keys are then used to connect to the EC2 instance to configure the server and initialize the application.
 
 **3.	EC2 instance**
+
 The EC2 instance is created using the security group, Key pair and the previous setting indicated as variables.
 
 Then the public  IP of the new EC2 instance is saved in the inventory file. Finally, an SSH connection is made to the EC2 instance to check its operation.
