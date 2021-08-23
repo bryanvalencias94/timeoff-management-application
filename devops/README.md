@@ -1,5 +1,7 @@
 # DevOps for Timeoff Magamenet Application
 
+[TOC]
+
 This “devops” folder contains all the Jenkins pipelines, infrastructure as code and configuration management (using Ansible) and pre-requisites to deploy the Timeoff Management Application (https://github.com/bryanvalencias94/timeoff-management-application) in an EC2 virtualization solution.
 
 # Prerequisites
@@ -88,7 +90,7 @@ These keys are then used to connect to the EC2 instance to configure the server 
 The EC2 instance is created using the security group, Key pair and the previous setting indicated as variables.
 
 Then the public  IP of the new EC2 instance is saved in the inventory file. Finally, an SSH connection is made to the EC2 instance to check its operation.
-## Configuration management playbook
+### Configuration management playbook
 Once the EC2 instance is created it is time to prepare it to be able to run the NodeJS application. This playbook is composed of 17 tasks:
 -	In the first task, some base packages are installed in the new machine, using the “yum tool".
 -	The next 15 tasks install NodeJS and npm and set some environment variables. To run this application successfully on an Amazon Linux instance, was necessary to install the specific version 13.7.0, otherwise the app crashes when it tries to start. Due to version 13.7.0 is not an LTS version, the short way to install NodeJS it is not used.
@@ -111,7 +113,3 @@ Also choose the “GitHub hook trigger for GITScm polling” in the “Build tri
 ![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/BuildCreatedJenkins.png?raw=true)
 
 4.	You can use the public IP of the EC2 instance and port 3000 to open the application through the browser.
-
-
-
-
