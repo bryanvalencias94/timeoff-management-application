@@ -10,42 +10,39 @@ This “devops” folder contains all the Jenkins pipelines, infrastructure as c
 - Artifactory plugin installed
 - Pipeline plugin installed
 - Credentials for Artifactory.
-- Credentials for AWS. Username: <AccessKey> and Password: <SecretKey>
+- Credentials for AWS. Username: AccessKey and Password: SecretKey
 - Credentials for Jenkins Agent with Ansible
 - Configured connection to Jenkins agent (instance with Ansible installed). For this example, the Jenkins node must be named “ec2-ansible”. If you prefer using another name, change it in the Jenkinsfile as well.
 - Global tool configuration for NodeJS installation using version 13.7.0. Include node-test in Global npm packages to install. Name it as NodeJS13. If you prefer using another name, change it in the Jenkinsfile as well.
-Example:
-<p align="center">
-  <a href="https://github.com/bryanvalencias94/timeoff-management-application">
-    <img src="images/NodeJSGlobalToolJenkins.png" alt="NodeJSGlobalToolJenkins" width="700" height="600">
-  </a>
-</p>
+	
+	Example:
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/NodeJSGlobalToolJenkins.png?raw=true)
 
-![](https://github.com/bryanvalencias94/timeoff-management-application/images/NodeJSGlobalToolJenkins.png)
 - Global tool configuration for Ansible
-Example:
- 
+	
+	Example:
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/AnsibleGlobalToolJenkins.png?raw=true)
 - Configure system for Artifactory, using the corresponding credentials and URLs.
 Example:
- 
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/JFrogConfigJenkins.png?raw=true)
 2. Artifactory instance with a repository named "timeoff-management-application".
 Example:
- 
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/ArtifactoryRepository.png?raw=true)
 
-3. Ansible running on a Jenkins node with the community.general collection installed. To install it use: 
-ansible-galaxy collection install community.general. 
+3. Ansible running on a Jenkins node with the community.general collection installed. To install it use:
+`ansible-galaxy collection install community.general.`
 
 4. Webhook configured on GitHub in the corresponding repository to the Jenkins URL.
 Example:
- 
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/GitHubWebHook.png?raw=true)
 
 # Architecture diagrams
 ## 1. DevOps component architecture
 Jenkins, Artifactory, and Ansible (Jenkins agent) are installed on EC2 instances for this example. Other installations are also valid, such as using docker.
- 
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/DevOpsComponentArchitecture.png?raw=true)
 
 ## 2. DevOps flow diagram
- 
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/DevOpsFlow.png?raw=true)
 
 # Understanding the Jenkins pipeline and Ansible playbooks.
 ## Jenkins pipeline
@@ -68,18 +65,20 @@ Using the “ansiblePlaybook” function, the playbook  called “infrastructure
 6.	Configuration management and application deployment
 Another playbook is run using the “ansiblePlaybook” function. In this case, the credentials sent to Ansible are the Artifactory credentials, because a task of the “config_management_playbook.yml” needs download the final artifact from Artifactory to run the NodeJS application.
 In the first sections of the pipeline, the agent with label “ec2-ansible” is indicated. This ensures that the agent with the Ansible instance is used to run the steps. The tool named “NodeJS13” is also specified to use the specific version of node in the Jenkins agent.
-To clean the workspace on the Jenkins agent once the pipeline is already finished, a post configuration is included. 
+To clean the workspace on the Jenkins agent once the pipeline is already finished, a post configuration is included.
+
 ## Ansible playbooks
 ### Infrastructure playbook
-The infrastructure playbook is used to create the necessary infrastructure to run the Timeoff Management application in a virtualization solution, for this case an EC2 instance in AWS. At first, some variables are indicated to parametrize the playbook, such as the AWS region, the instance type, the AMI ADI, among others.
+The infrastructure playbook is used to create the necessary infrastructure to run the Timeoff Management application in a virtualization solution, for this case an EC2 instance in AWS. At first, some variables are indicated to parametrize the playbook, such as the AWS region, the instance type, the AMI ID, among others.
 The following resources are created in AWS in the group of tasks:
-1.	Security group.
+
+**1.	Security group**.
 Note that AccessKey and SecretKey are passed as variables from the Jenkins pipeline. It is also important to note that the port 3000 is specify and allowed to be access from any machine, since the NodeJS app uses this port to be exposed.
 
-2.	Key pair
+**2.	Key pair**
 These keys are then used to connect to the EC2 instance to configure the server and initialize the application.
 
-3.	EC2 instance
+**3.	EC2 instance**
 The EC2 instance is created using the security group, Key pair and the previous setting indicated as variables.
 
 Then the public  IP of the new EC2 instance is saved in the inventory file. Finally, an SSH connection is made to the EC2 instance to check its operation.
@@ -94,8 +93,8 @@ Once the EC2 instance is created is time to prepare it to be able to run the Nod
 # Steps to deploy the application using the proposed strategy.
 1.	Create a pipeline in Jenkins and configure it to use pipeline script from SCM. Set the git repository and the path for the Jenkinsfile (relative path in the git repository). For this specific example and repository, these are the values:
 
- 
- 
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/JenkinsPipeline1.png?raw=true)
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/JenkinsPipeline2.png?raw=true)
 
 Also choose the “GitHub hook trigger for GITScm polling” in the “Build triggers” section. This will trigger the pipeline every time there is a change to the master branch.
 
@@ -103,7 +102,7 @@ Also choose the “GitHub hook trigger for GITScm polling” in the “Build tri
 
 3.	Check that a new build ID is created, and all its stages are executed successfully.
 
- 
+![](https://github.com/bryanvalencias94/timeoff-management-application/blob/master/devops/images/BuildCreatedJenkins.png?raw=true)
 
 4.	You can use the public IP of the EC2 instance and port 3000 to open the application through the browser.
 
