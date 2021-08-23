@@ -11,10 +11,19 @@
       <a href="#architecture-diagrams">Architecture diagrams</a>
       <ul>
         <li><a href="#devops-component-architecture">DevOps component architecture</a></li>
-        <li><a href="#vevops-flow-diagram">DevOps flow diagram</a></li>
+        <li><a href="#devops-flow-diagram">DevOps flow diagram</a></li>
       </ul>
     </li>
     <li><a href="#understanding-the-jenkins-pipeline-and-ansible-playbooks">Understanding the Jenkins pipeline and Ansible playbooks</a></li>
+	  <ul>
+        <li><a href="#jenkins-pipeline">Jenkins pipeline</a></li>
+        <li><a href="#ansible-playbooks">Ansible playbooks</a>
+			<ul>
+				<li><a href="#infrastructure-playbook">Infrastructure playbook</a></li>
+				<li><a href="#configuration-management-playbook">Configuration management playbook</a></li>
+			</ul>
+		</li>
+      </ul>
     <li><a href="#steps-to-deploy-the-application-using-the-proposed-strategy">Steps to deploy the application using the proposed strategy</a></li>
   </ol>
 </details>
